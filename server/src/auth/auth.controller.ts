@@ -4,11 +4,11 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth-guard';
 import { Public } from './decorators/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Public()
   @Post('register')
   async register(@Body('user') registerUserDto: RegisterUserDto) {
     try {
@@ -17,8 +17,7 @@ export class AuthController {
       throw new Error('Registration failed: ' + error.message);
     }
   }
-
-  @Public()
+  
   @UseGuards(LocalAuthGuard) 
   @Post('login')
   async login(@Request() req: any) {  

@@ -11,7 +11,8 @@ export class AuthService {
   constructor (private readonly userService: UserService, private readonly jwtService: JwtService){}
 
   async validateUser(username: string, password: string): Promise<any> {
-    const user: User = await this.userService.findByUsername(username);
+    let email = username;
+    const user: User = await this.userService.findByEmail(email);
     if(!user){
       throw new BadRequestException("Invalid Credentials")
     }
