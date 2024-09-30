@@ -1,7 +1,7 @@
 import {Model, BeforeCreate, Column, DataType, Default, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import * as bcrypt from "bcryptjs";
 
-@Table({ createdAt: true, updatedAt: false, timestamps: true})
+@Table({ createdAt: true, updatedAt: false, timestamps: true, tableName: "users"})
 export class User extends Model {
     @PrimaryKey
     @Default(DataType.UUIDV4())

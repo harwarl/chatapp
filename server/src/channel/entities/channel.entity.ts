@@ -1,6 +1,6 @@
 import { Column, DataType, Default, Model, PrimaryKey, Table } from "sequelize-typescript";
 
-@Table({ timestamps: true, createdAt: true, updatedAt: false})
+@Table({ timestamps: true, createdAt: true, updatedAt: false, tableName: "channels"})
 export class Channel extends Model{
     @PrimaryKey
     @Default(DataType.UUIDV4())

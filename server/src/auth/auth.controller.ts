@@ -1,34 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
+import { LocalAuthGuard } from './guards/local-auth-guard';
+import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post()
-  create(@Body() createAuthDto: CreateAuthDto) {
-    return this.authService.create(createAuthDto);
+  @Public()
+  @Post('register')
+  async register(@Body('user') registerUserDto: RegisterUserDto) {
+    try {
+      return await this.authService.register(registerUserDto);
+    } catch (error) {
+      throw new Error('Registration failed: ' + error.message);
+    }
   }
 
-  @Get()
-  findAll() {
-    return this.authService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthDto: UpdateAuthDto) {
-    return this.authService.update(+id, updateAuthDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.authService.remove(+id);
+  @Public()
+  @UseGuards(LocalAuthGuard) 
+  @Post('login')
+  async login(@Request() req: any) {  
+    try{
+      return this.authService.login(req.user); 
+    }catch(error){
+      throw new Error("Login Failed: " + error.message)
+    }
   }
 }

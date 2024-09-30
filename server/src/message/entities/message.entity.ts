@@ -1,9 +1,9 @@
-import { Model } from "sequelize";
+import { Model } from "sequelize-typescript";
 import { Column, DataType, PrimaryKey, Table, Default, ForeignKey, BelongsTo } from "sequelize-typescript";
 import { Channel } from "src/channel/entities/channel.entity";
 import { User } from "src/user/entities/user.entity";
 
-@Table({ createdAt: true, updatedAt: true})
+@Table({ createdAt: true, updatedAt: true, tableName: "messages"})
 export class Message extends Model {
     @PrimaryKey
     @Default(DataType.UUIDV4())
