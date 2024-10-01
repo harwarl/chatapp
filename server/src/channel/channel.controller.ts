@@ -11,6 +11,7 @@ import { ChannelService } from './channel.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
 import { CurrentUser } from 'src/user/decorators/user.decorator';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('channel')
 export class ChannelController {
@@ -31,6 +32,7 @@ export class ChannelController {
     return await this.channelService.deleteChannel({ id });
   }
 
+  @Public()
   @Get(':id')
   async getChannel(@Param('id') id: string) {
     return await this.channelService.getChannel(id);

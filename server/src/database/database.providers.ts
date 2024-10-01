@@ -6,19 +6,18 @@ import { User } from 'src/user/entities/user.entity';
 export const databaseProviders = [
   {
     provide: 'SEQUELIZE',
-    useFactory: async () =>{
-      console.log(process.env.DB_PASSWORD)
+    useFactory: async () => {
       const sequelize = new Sequelize({
-        dialect: "postgres",
-        host: "localhost",
+        dialect: 'postgres',
+        host: 'localhost',
         port: 5432,
         username: 'postgres',
-        password: "root",
-        database: "chat_db"
+        password: 'root',
+        database: 'chat_db',
       });
       sequelize.addModels([User, Message, Channel]);
       await sequelize.sync();
       return sequelize;
-    }
-  }
+    },
+  },
 ];
