@@ -67,7 +67,7 @@ export class UserService {
     const secondUser = await this.findById(friendId);
 
     //check if second user exists
-    if (!secondUser) throw new NotFoundException('User Not Found.');
+    if (!currentUser || !secondUser) throw new NotFoundException('User Not Found.');
 
     //check if the currentUser already blocked the intending friend or it is the other way
     if (
