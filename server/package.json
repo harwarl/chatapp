@@ -27,6 +27,8 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.4.4",
+    "@nestjs/websockets": "^10.4.4",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^2.4.3",
     "passport": "^0.7.0",
@@ -36,7 +38,8 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "sequelize": "^6.29.3",
-    "sequelize-typescript": "^2.1.5"
+    "sequelize-typescript": "^2.1.5",
+    "socket.io": "^4.8.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
