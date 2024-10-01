@@ -11,20 +11,13 @@ export class AuthController {
 
   @Post('register')
   async register(@Body('user') registerUserDto: RegisterUserDto) {
-    try {
       return await this.authService.register(registerUserDto);
-    } catch (error) {
-      throw new Error('Registration failed: ' + error.message);
-    }
+    
   }
   
   @UseGuards(LocalAuthGuard) 
   @Post('login')
   async login(@Request() req: any) {  
-    try{
       return this.authService.login(req.user); 
-    }catch(error){
-      throw new Error("Login Failed: " + error.message)
-    }
   }
 }

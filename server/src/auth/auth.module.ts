@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { jwtConstants } from './utils/contants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserService } from 'src/user/user.service';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({
   imports: [UserModule, PassportModule, 
@@ -18,12 +19,12 @@ import { UserService } from 'src/user/user.service';
         return {
           secret: configService.get<string>("JWT_SECRET") || "defaultsecretkey",
           signOptions: {
-            expiresIn: configService.get<string>("JWT_EXPIRES_IN") || "30m"
+            expiresIn: configService.get<string>("JWT_EXPIRES_IN") || "3d"
           }
         }
       }
   })],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, UserService],
+  providers: [AuthService, LocalStrategy, UserService, JwtStrategy],
 })
 export class AuthModule {}
