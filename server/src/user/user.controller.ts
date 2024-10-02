@@ -27,8 +27,8 @@ export class UserController {
 
   //Get a user by his ID
   @Public()
-  @Get(':username')
-  async getUser(@Param('username') username: string) {
+  @Get('')
+  async getUser(@Query('username') username: string) {
     const user = await this.userService.findByUsername(username);
     return { user };
   }
@@ -42,7 +42,7 @@ export class UserController {
   }
 
   //Update the User
-  @Put('')
+  @Put('profile')
   async updateCurrentUser(
     @CurrentUser() currentUser: User,
     @Body() updateUserDto: UpdateUserDto,
@@ -53,7 +53,6 @@ export class UserController {
   //Get User Friends
   @Get('/friends')
   async getFriends(@CurrentUser('id') currentUserId: string) {
-    console.log({ currentUserId });
     return await this.userService.getUserFriends(currentUserId);
   }
 

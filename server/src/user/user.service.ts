@@ -53,12 +53,21 @@ export class UserService {
   }
 
   //Update User Information
-  async updateUser(
-    currentUser: User,
-    updateUserDto: UpdateUserDto,
-  ): Promise<User | undefined> {
-    await currentUser.update(updateUserDto);
-    return currentUser;
+  async updateUser(currentUser: User, updateUserDto: UpdateUserDto) {
+    try {
+      const user = await User.update(updateUserDto, {
+        where: { id: currentUser.id },
+      });
+      return {
+        statusCode: 200,
+        message: 'User updated successfully',
+      };
+    } catch (error) {
+      return {
+        statusCode: 400,
+        message: 'Could not update',
+      };
+    }
   }
 
   //Set Request
@@ -67,7 +76,8 @@ export class UserService {
     const secondUser = await this.findById(friendId);
 
     //check if second user exists
-    if (!currentUser || !secondUser) throw new NotFoundException('User Not Found.');
+    if (!currentUser || !secondUser)
+      throw new NotFoundException('User Not Found.');
 
     //check if the currentUser already blocked the intending friend or it is the other way
     if (
@@ -75,25 +85,27 @@ export class UserService {
       (secondUser.blocked && secondUser.blocked.includes(currentUser.id))
     )
       return {
-        statusCode: '406',
+        statusCode: 406,
         message: 'You can not do this. You are blocked.',
       };
 
     //Check if the user is already friends with the person
+    console.log;
     if (status && currentUser.friends && currentUser.friends.includes(friendId))
       return {
-        statusCode: '409',
+        statusCode: 409,
         message: 'You are already friends',
       };
 
     //Check if the current User has already sent them a request
+    console.log(secondUser.requests);
     if (
       status &&
-      currentUser.requests &&
-      currentUser.requests.includes(friendId)
+      secondUser.requests &&
+      secondUser.requests.includes(currentUser.id)
     )
       return {
-        statusCode: '409',
+        statusCode: 409,
         message: 'You already sent a request to this user',
       };
 
@@ -113,7 +125,7 @@ export class UserService {
       User.update(
         {
           requests: sequelize.fn(
-            'array_append',
+            'array_remove',
             sequelize.col('requests'),
             currentUser.id,
           ),
@@ -123,7 +135,7 @@ export class UserService {
     }
 
     return {
-      statusCode: '200',
+      statusCode: 200,
       message: 'User updated successfully.',
     };
   }
@@ -141,14 +153,14 @@ export class UserService {
       (secondUser.blocked && secondUser.blocked.includes(currentUser.id))
     )
       return {
-        statusCode: '406',
+        statusCode: 406,
         message: 'You cannot do this, You are blocked.',
       };
 
     //Check if users are already friends
     if (status && currentUser.friends && currentUser.friends.includes(friendId))
       return {
-        statusCode: '409',
+        statusCode: 409,
         message: 'You are already friends',
       };
 
@@ -156,6 +168,7 @@ export class UserService {
       //Set Reqeust status to false
       this.setRequest(secondUser.id, currentUser.id, false);
 
+      //Add the secondUser as friend to the current User friends List
       User.update(
         {
           friends: sequelize.fn(
@@ -167,6 +180,7 @@ export class UserService {
         { where: { id: currentUser.id } },
       );
 
+      //Add the currentUser as friends to the second Users Friends List
       User.update(
         {
           friends: sequelize.fn(
@@ -181,7 +195,7 @@ export class UserService {
       User.update(
         {
           friends: sequelize.fn(
-            'array_append',
+            'array_remove',
             sequelize.col('friends'),
             friendId,
           ),
@@ -192,7 +206,7 @@ export class UserService {
       User.update(
         {
           friends: sequelize.fn(
-            'array_append',
+            'array_remove',
             sequelize.col('friends'),
             currentUser.id,
           ),
@@ -202,7 +216,7 @@ export class UserService {
     }
 
     return {
-      statusCode: '200',
+      statusCode: 200,
       message: 'User Updated Successfully',
     };
   }
@@ -217,7 +231,7 @@ export class UserService {
 
     if (status && currentUser.blocked && currentUser.blocked.includes(friendId))
       return {
-        statusCode: '409',
+        statusCode: 409,
         message: 'This user has already been blocked',
       };
 
@@ -245,7 +259,7 @@ export class UserService {
       User.update(
         {
           blocked: sequelize.fn(
-            'array_append',
+            'array_remove',
             sequelize.col('blocked'),
             friendId,
           ),
@@ -259,7 +273,7 @@ export class UserService {
     }
 
     return {
-      statusCode: '200',
+      statusCode: 200,
       message: 'User Updated Successfully',
     };
   }
@@ -268,19 +282,22 @@ export class UserService {
   async getUserFriends(currentUserId: string) {
     try {
       let friends: User[] = [];
-
       const friendIds = (await User.findByPk(currentUserId)).friends;
-      for (let i = 0; i < friendIds.length; i++) {
-        friends.push(await User.findByPk(friendIds[i]));
+
+      if (friendIds?.length && friendIds.length > 0) {
+        for (let i = 0; i < friendIds.length; i++) {
+          friends.push(await User.findByPk(friendIds[i]));
+        }
       }
 
       return {
-        statusCode: '200',
+        statusCode: 200,
         friends,
       };
     } catch (error) {
+      console.log(error);
       return {
-        statusCode: '404',
+        statusCode: 404,
         message: 'Friends Not Found',
       };
     }
@@ -292,18 +309,20 @@ export class UserService {
       let requests: User[] = [];
       const requestIds = (await User.findByPk(currentUserId)).requests;
 
-      for (let i = 0; i < requestIds.length; i++) {
-        const user = await User.findByPk(requestIds[i]);
-        requests.push(user);
+      if (requestIds?.length && requests.length > 0) {
+        for (let i = 0; i < requestIds.length; i++) {
+          const user = await User.findByPk(requestIds[i]);
+          requests.push(user);
+        }
       }
 
       return {
-        statusCode: '200',
+        statusCode: 200,
         requests,
       };
     } catch (error) {
       return {
-        statusCode: '404',
+        statusCode: 404,
         messgae: 'Requests Not Found',
       };
     }
@@ -315,18 +334,20 @@ export class UserService {
       const blocked: User[] = [];
       const blockedIds = (await User.findByPk(currentUserId)).blocked;
 
-      for (let i = 0; i < blockedIds.length; i++) {
-        const user = await User.findByPk(blockedIds[i]);
-        blocked.push(user);
+      if (blockedIds?.length && blockedIds.length > 0) {
+        for (let i = 0; i < blockedIds.length; i++) {
+          const user = await User.findByPk(blockedIds[i]);
+          blocked.push(user);
+        }
       }
 
       return {
-        statusCode: '202',
+        statusCode: 202,
         blocked,
       };
     } catch (error) {
       return {
-        statusCode: '404',
+        statusCode: 404,
         message: 'Blocked Not Found',
       };
     }
