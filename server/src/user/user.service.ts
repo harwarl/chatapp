@@ -90,7 +90,6 @@ export class UserService {
       };
 
     //Check if the user is already friends with the person
-    console.log;
     if (status && currentUser.friends && currentUser.friends.includes(friendId))
       return {
         statusCode: 409,
@@ -98,7 +97,6 @@ export class UserService {
       };
 
     //Check if the current User has already sent them a request
-    console.log(secondUser.requests);
     if (
       status &&
       secondUser.requests &&
@@ -286,7 +284,7 @@ export class UserService {
 
       if (friendIds?.length && friendIds.length > 0) {
         for (let i = 0; i < friendIds.length; i++) {
-          friends.push(await User.findByPk(friendIds[i]));
+          friends.push(await this.findById(friendIds[i]));
         }
       }
 
@@ -311,8 +309,7 @@ export class UserService {
 
       if (requestIds?.length && requests.length > 0) {
         for (let i = 0; i < requestIds.length; i++) {
-          const user = await User.findByPk(requestIds[i]);
-          requests.push(user);
+          requests.push(await this.findById(requestIds[i]));
         }
       }
 
@@ -336,8 +333,7 @@ export class UserService {
 
       if (blockedIds?.length && blockedIds.length > 0) {
         for (let i = 0; i < blockedIds.length; i++) {
-          const user = await User.findByPk(blockedIds[i]);
-          blocked.push(user);
+          blocked.push(await this.findById(blockedIds[i]));
         }
       }
 
