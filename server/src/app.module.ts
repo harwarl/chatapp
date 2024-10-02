@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { ConfigModule} from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { ChannelModule } from './channel/channel.module';
 import { MessageModule } from './message/message.module';
 import { APP_GUARD } from '@nestjs/core';
@@ -14,18 +14,21 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './env'
+      envFilePath: '.env',
     }),
-    AuthModule, 
-    UserModule, 
+    AuthModule,
+    UserModule,
     ChannelModule,
-    MessageModule],
+    MessageModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, {
-    provide: APP_GUARD,
-    useClass: JwtAuthGuard
-  },
-  JwtStrategy],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    JwtStrategy,
+  ],
 })
-
 export class AppModule {}

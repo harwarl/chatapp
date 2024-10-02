@@ -1,31 +1,28 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
-  Patch,
   Param,
-  Delete,
   Query,
   Put,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CurrentUser } from './decorators/user.decorator';
 import { User } from './entities/user.entity';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
 
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  //Get the Current User's Profile
-  @Get()
-  async getCurrentUser(@CurrentUser() currentUser: User) {
-    return { currentUser };
+  // Get the Current User's Profile
+  @Get('profile')
+  async getCurrentUser(@CurrentUser('id') currentUserId: string) {
+    return await this.userService.findById(currentUserId);
   }
 
   //Get a user by his ID
@@ -38,14 +35,14 @@ export class UserController {
 
   //Get a number of users by the search keyword
   @Public()
-  @Get()
+  @Get('')
   async getUserBySearch(@Query('search') search: string) {
     const users = await this.userService.findBySearch(search);
     return { users };
   }
 
   //Update the User
-  @Put()
+  @Put('')
   async updateCurrentUser(
     @CurrentUser() currentUser: User,
     @Body() updateUserDto: UpdateUserDto,
@@ -56,6 +53,7 @@ export class UserController {
   //Get User Friends
   @Get('/friends')
   async getFriends(@CurrentUser('id') currentUserId: string) {
+    console.log({ currentUserId });
     return await this.userService.getUserFriends(currentUserId);
   }
 
