@@ -22,10 +22,9 @@ export class UserService {
 
   //Find User by Id
   async findById(id: string): Promise<User | undefined> {
-    const user = await User.findByPk(id, {
+    return await User.findByPk(id, {
       attributes: { exclude: ['password'] },
     });
-    return user;
   }
 
   //FInd Users By Search
