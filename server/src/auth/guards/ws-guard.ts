@@ -14,7 +14,7 @@ export class WsGuard implements CanActivate {
     try {
       const client = context.switchToWs().getClient();
 
-      if (client.user) {
+      if (!client.user) {
         client.disconnect(true);
       }
 

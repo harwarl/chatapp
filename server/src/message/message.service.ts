@@ -31,6 +31,7 @@ export class MessageService {
         message: 'Message Created Successfully',
       };
     } catch (error) {
+      console.log(error);
       return {
         statusCode: '400',
         message: error,

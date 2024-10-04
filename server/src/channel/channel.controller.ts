@@ -13,7 +13,7 @@ import { UpdateChannelDto } from './dto/update-channel.dto';
 import { CurrentUser } from 'src/user/decorators/user.decorator';
 import { Public } from 'src/auth/decorators/public.decorator';
 
-@Controller('channel')
+@Controller('channels')
 export class ChannelController {
   constructor(private readonly channelService: ChannelService) {}
 

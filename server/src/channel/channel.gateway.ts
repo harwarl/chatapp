@@ -2,21 +2,17 @@ import { UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
   WsException,
 } from '@nestjs/websockets';
-import { SocketType } from 'dgram';
 import { Server, Socket } from 'socket.io';
-import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth-guard';
 import { WsGuard } from 'src/auth/guards/ws-guard';
-import { JwtStrategy } from 'src/auth/strategies/jwt.strategy';
 import { CreateMessageDto } from 'src/message/dto/create-message.dto';
 import { MessageService } from 'src/message/message.service';
 import { UserService } from 'src/user/user.service';
@@ -63,13 +59,65 @@ export class ChannelGateway
     console.log(`Client ${client.id} with userId ${client.user.id} connected`);
   }
 
-  handleDisconnect(client: Socket) {
-    console.log(`Client ${client.id} disconnected`);
+  @UseGuards(WsGuard)
+  @SubscribeMessage('message')
+  async handleMessage(
+    @MessageBody()
+    createMessageDto: CreateMessageDto,
+    @ConnectedSocket() client: ISocket,
+  ): Promise<void> {
+    console.log(
+      `Client ${client.id} sended message: ${createMessageDto.text} to room: ${createMessageDto.channelId}`,
+    );
+    console.log({ createMessageDto });
+    const message = await this.messageService.addMessage({
+      ...createMessageDto,
+      userId: client.user.id,
+    });
+
+    client.emit('message', message);
+    client.to(createMessageDto.channelId).emit('message', message);
   }
 
   @UseGuards(WsGuard)
-  @SubscribeMessage('chat')
-  handleMessage(client: ISocket, data: unknown): void {
-    
+  @SubscribeMessage('join')
+  handleJoin(
+    @MessageBody() data: { channelId: string },
+    @ConnectedSocket() client: ISocket,
+  ): string {
+    console.log(
+      `Client ${client.id} with User Id ${client.user.id} joined ${data.channelId}`,
+    );
+    client.join(data.channelId);
+    return data.channelId;
+  }
+
+  @UseGuards(WsGuard)
+  @SubscribeMessage('leave')
+  handleLeave(
+    @MessageBody() data: { channelId: string },
+    @ConnectedSocket() client: ISocket,
+  ): string {
+    console.log(
+      `Client ${client.id} with User Id ${client.user.id} left ${data.channelId}`,
+    );
+    client.leave(data.channelId);
+    return data.channelId;
+  }
+
+  @UseGuards(WsGuard)
+  @SubscribeMessage('typingNotification')
+  handleMessageNotification(
+    @MessageBody() data: { channelId: string },
+    @ConnectedSocket() client: ISocket,
+  ): void {
+    console.log('Is Typing');
+    client
+      .to(data.channelId)
+      .emit('isTyping', `${client.user.username} is typing`);
+  }
+
+  handleDisconnect(client: Socket) {
+    console.log(`Client ${client.id} disconnected`);
   }
 }
