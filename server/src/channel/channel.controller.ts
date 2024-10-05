@@ -32,14 +32,15 @@ export class ChannelController {
     return await this.channelService.deleteChannel({ id });
   }
 
-  @Public()
-  @Get(':id')
-  async getChannel(@Param('id') id: string) {
-    return await this.channelService.getChannel(id);
+  @Get('my-channels')
+  async getChannelsByUser(@CurrentUser('id') currentUserId: string) {
+    return await this.channelService.getChannelsByUser(currentUserId);
   }
 
-  @Get('me')
-  async getChannelsByUser(@CurrentUser('id') currentUserId: string) {
-    return await this.getChannelsByUser(currentUserId);
+  // @Public()
+  @Get(':id')
+  async getChannel(@Param('id') id: string) {
+    console.log('In here');
+    return await this.channelService.getChannel(id);
   }
 }
