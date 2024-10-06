@@ -1,7 +1,12 @@
-import React from "react";
+import AppRouter from "./components/routing/app-router/AppRouter";
+import Layout from "./components/layout";
 
 function App() {
-  return <div className="App">This is the new App</div>;
+  return (
+    <Layout>
+      <AppRouter />
+    </Layout>
+  );
 }
 
 export default App;
