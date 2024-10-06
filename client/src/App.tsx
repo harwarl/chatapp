@@ -1,5 +1,7 @@
+import React from "react";
+
 function App() {
-  return <>This is the home page</>;
+  return <div className="App">This is the new App</div>;
 }
 
 export default App;
