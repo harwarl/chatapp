@@ -4,20 +4,26 @@ import HomePage from "../pages/Home/HomePage";
 import SigninPage from "../pages/Signin/SigninPage";
 import SignUpPage from "../pages/Signup/SignUpPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
-import AddChannelPage from "../pages/Add-Channel/AddChannelPage";
+import AddChannelPage from "../pages/AddFriend/AddFriend";
 import ChannelPage from "../pages/Channel/ChannelPage";
-import ChannelsPage from "../pages/Channels/ChannelsPage";
-import UpdateChannelPage from "../pages/Update-channel/UpdateChannelPage";
+import Edit from "../pages/Edit";
+import AddFriendPage from "../pages/AddFriend/AddFriend";
+import Chat from "../pages/Chat";
+import CreateChannel from "../pages/Create";
+import Create from "../pages/Create";
+import ProfileEdit from "../pages/ProfileEdit";
 
 export enum Paths {
   HOME = "/",
   SIGNUP = "/sign-up",
   SIGNIN = "/sign-in",
   PROFILE = "/profile",
-  CHANNELS = "/channels",
-  CHANNEL = "/channels/:id",
-  ADD_CHANNEL = "/channels/add",
-  UPDATE_CHANNEL = "/channels/:id/update",
+  EDITPROFILE = "/profile/edit",
+  CREATE = "/create",
+  CHANNEL = "/channel",
+  ADDFRIEND = "/addfriend",
+  EDIT = "/edit",
+  CHAT = "/chat",
 }
 
 export interface IRoute {
@@ -33,8 +39,10 @@ export const publicRoutes: IRoute[] = [
 
 export const authRoutes: IRoute[] = [
   { path: Paths.PROFILE, Component: ProfilePage },
-  { path: Paths.ADD_CHANNEL, Component: AddChannelPage },
-  { path: Paths.CHANNEL, Component: ChannelsPage },
-  { path: Paths.CHANNELS, Component: ChannelPage },
-  { path: Paths.UPDATE_CHANNEL, Component: UpdateChannelPage },
+  { path: Paths.ADDFRIEND, Component: AddFriendPage },
+  { path: Paths.EDITPROFILE, Component: ProfileEdit },
+  { path: Paths.CHANNEL, Component: ChannelPage },
+  { path: Paths.CHAT, Component: Chat },
+  { path: Paths.CREATE, Component: Create },
+  { path: Paths.EDIT, Component: Edit },
 ];

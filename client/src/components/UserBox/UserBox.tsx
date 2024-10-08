@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { getAuthState } from "../../store/selectors/authSelectors";
 import { useEffect, useState } from "react";
+import { RxDotsVertical } from "react-icons/rx";
+import { MdAddToPhotos } from "react-icons/md";
 import { getUser } from "../../services/userService";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { User } from "../../utils/types";
@@ -15,23 +17,58 @@ const UserBox = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const result = await getUser();
-      setLoggedUser(result.user);
+      setLoggedUser(result);
     };
 
     fetchUser();
   }, [user]);
 
   return (
-    <div>
+    <div className="p-3 flex items-center relative h-22">
       <LazyLoadImage
         onClick={() => navigate("/profile", { state: { userId: user?.id } })}
+        className="w-16 h-16 object-cover rounded-full cursor-pointer"
         src={loggedUser?.image}
         alt="user-pp"
         effect="blur"
       />
-      <p>{loggedUser?.username}</p>
+      <p className="ml-3 text-lg w-32 sm:w-64 md:w-40 lg:w-52 xl:w-56 h-7 overflow-hidden ">
+        {loggedUser?.username}
+      </p>
       {/* DropDown for buttons */}
-      <div></div>
+      <div className="ml-auto cursor-pointer group">
+        <RxDotsVertical className="text-2xl" />
+        <div className="absolute group-hover:block hidden text-white w-full lg-max-w-[220px] md:w-auto bg-neutral-800 border border-neutral-900 shadow-md rounded-md z-50 right-0">
+          <button
+            className="w-full hover:bg-neutral-700 duration-200 py-3 px-8 flex items-center"
+            onClick={() => navigate("/create")}
+          >
+            <MdAddToPhotos className="mr-3" />
+            Create Channel
+          </button>
+          <button
+            className="w-full hover:bg-neutral-700 duration-200 py-3 px-8 flex items-center"
+            onClick={() => navigate("/addfriend")}
+          >
+            <MdAddToPhotos className="mr-3" />
+            Create Channel
+          </button>
+          <button
+            className="w-full hover:bg-neutral-700 duration-200 py-3 px-8 flex items-center"
+            onClick={() => navigate("/create")}
+          >
+            <MdAddToPhotos className="mr-3" />
+            Create Channel
+          </button>
+          <button
+            className="w-full hover:bg-neutral-700 duration-200 py-3 px-8 flex items-center"
+            onClick={() => navigate("/create")}
+          >
+            <MdAddToPhotos className="mr-3" />
+            Create Channel
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

@@ -10,9 +10,9 @@ export type User = {
   email: string;
   image: string;
   about: string;
-  friends: string[];
-  requests: string[];
-  blocked: string[];
+  friends: string[] | null;
+  requests: string[] | null;
+  blocked: string[] | null;
 };
 
 export type Channel = {
