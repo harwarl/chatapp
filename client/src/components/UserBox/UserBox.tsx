@@ -4,9 +4,13 @@ import { getAuthState } from "../../store/selectors/authSelectors";
 import { useEffect, useState } from "react";
 import { RxDotsVertical } from "react-icons/rx";
 import { MdAddToPhotos } from "react-icons/md";
+import { IoPersonAddSharp } from "react-icons/io5";
+import { FaUserFriends } from "react-icons/fa";
+import { FiLogOut } from "react-icons/fi";
 import { getUser } from "../../services/userService";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { User } from "../../utils/types";
+import { signout } from "../../store/slice/authSlice";
 
 const UserBox = () => {
   const navigate = useNavigate();
@@ -50,22 +54,24 @@ const UserBox = () => {
             className="w-full hover:bg-neutral-700 duration-200 py-3 px-8 flex items-center"
             onClick={() => navigate("/addfriend")}
           >
-            <MdAddToPhotos className="mr-3" />
-            Create Channel
+            <IoPersonAddSharp className="mr-3" />
+            Add Friend
           </button>
           <button
             className="w-full hover:bg-neutral-700 duration-200 py-3 px-8 flex items-center"
-            onClick={() => navigate("/create")}
+            onClick={() =>
+              navigate("/profile", { state: { userId: user?.id } })
+            }
           >
-            <MdAddToPhotos className="mr-3" />
-            Create Channel
+            <FaUserFriends className="mr-3" />
+            Friends
           </button>
           <button
             className="w-full hover:bg-neutral-700 duration-200 py-3 px-8 flex items-center"
-            onClick={() => navigate("/create")}
+            onClick={() => dispatch(signout())}
           >
-            <MdAddToPhotos className="mr-3" />
-            Create Channel
+            <FiLogOut className="mr-3" />
+            Logout
           </button>
         </div>
       </div>
