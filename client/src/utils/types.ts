@@ -17,7 +17,7 @@ export type User = {
 
 export type Channel = {
   id: string;
-  participants: User[];
+  participants: string[];
   messages: Message[];
   name?: string;
   description?: string;

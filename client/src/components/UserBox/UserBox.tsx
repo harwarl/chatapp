@@ -20,8 +20,10 @@ const UserBox = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const result = await getUser();
-      setLoggedUser(result);
+      if (user?.id) {
+        // const result = await getUser(user.id);
+        // setLoggedUser(result);
+      }
     };
 
     fetchUser();
