@@ -5,6 +5,8 @@ import Logo from "../../assets/brand-logo.png";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import LogInForm from "../../components/Form/LoginForm";
 import FormSuccess from "../../components/loading/FormSuccess";
+import Divider from "../../components/Divider";
+import { Link } from "react-router-dom";
 
 const SigninPage = () => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(true);
@@ -32,12 +34,20 @@ const SigninPage = () => {
                   effect="blur"
                 />
                 <h1 className="text-3xl font-semibold text-center sm:hidden mb-10">
-                  Login
+                  {/* TODO: Add the login form component in here */}
                 </h1>
                 <LogInForm setIsFormOpen={setIsFormOpen} />
               </div>
             )}
-            {/* <Divider /> */}
+            <Divider />
+            <div className="text-center w-[90%] md:w-[80%] mx-auto">
+              <Link
+                className="hover:text-neutral-300 text-neutral-100 duration-200 w-full text-center mx-auto text-lg"
+                to="/register"
+              >
+                Don't have an account? Register
+              </Link>
+            </div>
           </>
         ) : (
           <FormSuccess message="Logged In" redirectTo="chat" />

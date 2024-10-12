@@ -8,6 +8,10 @@ import Cookies from "js-cookie";
 import { setUser } from "../../store/slice/authSlice";
 import toast, { Toaster } from "react-hot-toast";
 import TextInput from "../inputs/TextInput";
+import { MdMail } from "react-icons/md";
+import PasswordInput from "../inputs/PasswordInput";
+import { AiFillLock } from "react-icons/ai";
+import BasicButton from "../Button/BasicButton";
 
 type Props = {
   setIsFormOpen: Dispatch<SetStateAction<boolean>>;
@@ -59,8 +63,40 @@ const LogInForm: FC<Props> = ({ setIsFormOpen }) => {
 
   return (
     <form method="POST" name="form" onSubmit={handleSubmit(onSubmit)}>
-      {/* TODO: Add the inputs for the form */}
-      {/* <TextInput label="Email" placeholder="Type Your email" /> */}
+      <TextInput
+        label="Email"
+        placeholder="Type Your email"
+        Icon={MdMail}
+        informations={["Email is required", "email must be valid"]}
+        error={errors.email && errors.email.message}
+        refs={{
+          ...register("email", {
+            required: "email is required",
+            pattern: {
+              value:
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: "please enter a valid email.",
+            },
+          }),
+        }}
+      />
+
+      <PasswordInput
+        label="Password"
+        placeholder="Type your password."
+        error={errors.password && errors.password.message}
+        Icon={AiFillLock}
+        refs={{
+          ...register("password", {
+            required: "password is required",
+          }),
+        }}
+      />
+
+      <div className="w-[90%] md:w-[80%] mx-auto">
+        <BasicButton type="submit">Login</BasicButton>
+      </div>
+      <Toaster />
     </form>
   );
 };
